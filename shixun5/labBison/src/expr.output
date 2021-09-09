@@ -1,0 +1,348 @@
+Grammar
+
+    0 $accept: input $end
+
+    1 input: %empty
+    2      | input line
+
+    3 line: EOL
+    4     | exp EOL
+
+    5 exp: NUMBER
+    6    | exp PLUS exp
+    7    | exp MINUS exp
+    8    | exp MULT exp
+    9    | exp DIV exp
+   10    | MINUS exp
+   11    | exp EXPON exp
+   12    | LB exp RB
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    NUMBER <val> (258) 5
+    PLUS <op> (259) 6
+    MINUS <op> (260) 7 10
+    MULT <op> (261) 8
+    DIV <op> (262) 9
+    EXPON <op> (263) 11
+    EOL (264) 3 4
+    LB (265) 12
+    RB (266) 12
+    UMINUS (267)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (13)
+        on left: 0
+    input (14)
+        on left: 1 2
+        on right: 0 2
+    line (15)
+        on left: 3 4
+        on right: 2
+    exp <val> (16)
+        on left: 5 6 7 8 9 10 11 12
+        on right: 4 6 7 8 9 10 11 12
+
+
+State 0
+
+    0 $accept: . input $end
+
+    $default  reduce using rule 1 (input)
+
+    input  go to state 1
+
+
+State 1
+
+    0 $accept: input . $end
+    2 input: input . line
+
+    $end    shift, and go to state 2
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    EOL     shift, and go to state 5
+    LB      shift, and go to state 6
+
+    line  go to state 7
+    exp   go to state 8
+
+
+State 2
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 3
+
+    5 exp: NUMBER .
+
+    $default  reduce using rule 5 (exp)
+
+
+State 4
+
+   10 exp: MINUS . exp
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 9
+
+
+State 5
+
+    3 line: EOL .
+
+    $default  reduce using rule 3 (line)
+
+
+State 6
+
+   12 exp: LB . exp RB
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 10
+
+
+State 7
+
+    2 input: input line .
+
+    $default  reduce using rule 2 (input)
+
+
+State 8
+
+    4 line: exp . EOL
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+   11    | exp . EXPON exp
+
+    PLUS   shift, and go to state 11
+    MINUS  shift, and go to state 12
+    MULT   shift, and go to state 13
+    DIV    shift, and go to state 14
+    EXPON  shift, and go to state 15
+    EOL    shift, and go to state 16
+
+
+State 9
+
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+   10    | MINUS exp .
+   11    | exp . EXPON exp
+
+    $default  reduce using rule 10 (exp)
+
+    Conflict between rule 10 and token PLUS resolved as reduce (PLUS < UMINUS).
+    Conflict between rule 10 and token MINUS resolved as reduce (MINUS < UMINUS).
+    Conflict between rule 10 and token MULT resolved as reduce (MULT < UMINUS).
+    Conflict between rule 10 and token DIV resolved as reduce (DIV < UMINUS).
+    Conflict between rule 10 and token EXPON resolved as reduce (EXPON < UMINUS).
+
+
+State 10
+
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+   11    | exp . EXPON exp
+   12    | LB exp . RB
+
+    PLUS   shift, and go to state 11
+    MINUS  shift, and go to state 12
+    MULT   shift, and go to state 13
+    DIV    shift, and go to state 14
+    EXPON  shift, and go to state 15
+    RB     shift, and go to state 17
+
+
+State 11
+
+    6 exp: exp PLUS . exp
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 18
+
+
+State 12
+
+    7 exp: exp MINUS . exp
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 19
+
+
+State 13
+
+    8 exp: exp MULT . exp
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 20
+
+
+State 14
+
+    9 exp: exp DIV . exp
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 21
+
+
+State 15
+
+   11 exp: exp EXPON . exp
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp  go to state 22
+
+
+State 16
+
+    4 line: exp EOL .
+
+    $default  reduce using rule 4 (line)
+
+
+State 17
+
+   12 exp: LB exp RB .
+
+    $default  reduce using rule 12 (exp)
+
+
+State 18
+
+    6 exp: exp . PLUS exp
+    6    | exp PLUS exp .
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+   11    | exp . EXPON exp
+
+    MULT   shift, and go to state 13
+    DIV    shift, and go to state 14
+    EXPON  shift, and go to state 15
+
+    $default  reduce using rule 6 (exp)
+
+    Conflict between rule 6 and token PLUS resolved as reduce (%left PLUS).
+    Conflict between rule 6 and token MINUS resolved as reduce (%left MINUS).
+    Conflict between rule 6 and token MULT resolved as shift (PLUS < MULT).
+    Conflict between rule 6 and token DIV resolved as shift (PLUS < DIV).
+    Conflict between rule 6 and token EXPON resolved as shift (PLUS < EXPON).
+
+
+State 19
+
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    7    | exp MINUS exp .
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+   11    | exp . EXPON exp
+
+    MULT   shift, and go to state 13
+    DIV    shift, and go to state 14
+    EXPON  shift, and go to state 15
+
+    $default  reduce using rule 7 (exp)
+
+    Conflict between rule 7 and token PLUS resolved as reduce (%left PLUS).
+    Conflict between rule 7 and token MINUS resolved as reduce (%left MINUS).
+    Conflict between rule 7 and token MULT resolved as shift (MINUS < MULT).
+    Conflict between rule 7 and token DIV resolved as shift (MINUS < DIV).
+    Conflict between rule 7 and token EXPON resolved as shift (MINUS < EXPON).
+
+
+State 20
+
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    8    | exp MULT exp .
+    9    | exp . DIV exp
+   11    | exp . EXPON exp
+
+    EXPON  shift, and go to state 15
+
+    $default  reduce using rule 8 (exp)
+
+    Conflict between rule 8 and token PLUS resolved as reduce (PLUS < MULT).
+    Conflict between rule 8 and token MINUS resolved as reduce (MINUS < MULT).
+    Conflict between rule 8 and token MULT resolved as reduce (%left MULT).
+    Conflict between rule 8 and token DIV resolved as reduce (%left DIV).
+    Conflict between rule 8 and token EXPON resolved as shift (MULT < EXPON).
+
+
+State 21
+
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+    9    | exp DIV exp .
+   11    | exp . EXPON exp
+
+    EXPON  shift, and go to state 15
+
+    $default  reduce using rule 9 (exp)
+
+    Conflict between rule 9 and token PLUS resolved as reduce (PLUS < DIV).
+    Conflict between rule 9 and token MINUS resolved as reduce (MINUS < DIV).
+    Conflict between rule 9 and token MULT resolved as reduce (%left MULT).
+    Conflict between rule 9 and token DIV resolved as reduce (%left DIV).
+    Conflict between rule 9 and token EXPON resolved as shift (DIV < EXPON).
+
+
+State 22
+
+    6 exp: exp . PLUS exp
+    7    | exp . MINUS exp
+    8    | exp . MULT exp
+    9    | exp . DIV exp
+   11    | exp . EXPON exp
+   11    | exp EXPON exp .
+
+    EXPON  shift, and go to state 15
+
+    $default  reduce using rule 11 (exp)
+
+    Conflict between rule 11 and token PLUS resolved as reduce (PLUS < EXPON).
+    Conflict between rule 11 and token MINUS resolved as reduce (MINUS < EXPON).
+    Conflict between rule 11 and token MULT resolved as reduce (MULT < EXPON).
+    Conflict between rule 11 and token DIV resolved as reduce (DIV < EXPON).
+    Conflict between rule 11 and token EXPON resolved as shift (%right EXPON).

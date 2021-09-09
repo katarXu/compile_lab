@@ -1,0 +1,2 @@
+project(labLexer-1)
+add_executable(labLexer-1 ${CMAKE_CURRENT_SOURCE_DIR}/src/labLexer-1.c)

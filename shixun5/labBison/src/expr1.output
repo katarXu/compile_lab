@@ -1,0 +1,319 @@
+Grammar
+
+    0 $accept: input $end
+
+    1 input: %empty
+    2      | input line
+
+    3 line: EOL
+    4     | exp EOL
+
+    5 exp: exp PLUS term
+    6    | exp MINUS term
+    7    | term
+
+    8 term: term MULT fact
+    9     | term DIV fact
+   10     | fact
+
+   11 fact: NUMBER
+   12     | MINUS fact
+   13     | fact EXPON fact
+   14     | LB exp RB
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    NUMBER <val> (258) 11
+    PLUS <op> (259) 5
+    MINUS <op> (260) 6 12
+    MULT <op> (261) 8
+    DIV <op> (262) 9
+    EXPON <op> (263) 13
+    EOL (264) 3 4
+    LB (265) 14
+    RB (266) 14
+
+
+Nonterminals, with rules where they appear
+
+    $accept (12)
+        on left: 0
+    input (13)
+        on left: 1 2
+        on right: 0 2
+    line (14)
+        on left: 3 4
+        on right: 2
+    exp <val> (15)
+        on left: 5 6 7
+        on right: 4 5 6 14
+    term <val> (16)
+        on left: 8 9 10
+        on right: 5 6 7 8 9
+    fact <val> (17)
+        on left: 11 12 13 14
+        on right: 8 9 10 12 13
+
+
+State 0
+
+    0 $accept: . input $end
+
+    $default  reduce using rule 1 (input)
+
+    input  go to state 1
+
+
+State 1
+
+    0 $accept: input . $end
+    2 input: input . line
+
+    $end    shift, and go to state 2
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    EOL     shift, and go to state 5
+    LB      shift, and go to state 6
+
+    line  go to state 7
+    exp   go to state 8
+    term  go to state 9
+    fact  go to state 10
+
+
+State 2
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 3
+
+   11 fact: NUMBER .
+
+    $default  reduce using rule 11 (fact)
+
+
+State 4
+
+   12 fact: MINUS . fact
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    fact  go to state 11
+
+
+State 5
+
+    3 line: EOL .
+
+    $default  reduce using rule 3 (line)
+
+
+State 6
+
+   14 fact: LB . exp RB
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    exp   go to state 12
+    term  go to state 9
+    fact  go to state 10
+
+
+State 7
+
+    2 input: input line .
+
+    $default  reduce using rule 2 (input)
+
+
+State 8
+
+    4 line: exp . EOL
+    5 exp: exp . PLUS term
+    6    | exp . MINUS term
+
+    PLUS   shift, and go to state 13
+    MINUS  shift, and go to state 14
+    EOL    shift, and go to state 15
+
+
+State 9
+
+    7 exp: term .
+    8 term: term . MULT fact
+    9     | term . DIV fact
+
+    MULT  shift, and go to state 16
+    DIV   shift, and go to state 17
+
+    $default  reduce using rule 7 (exp)
+
+
+State 10
+
+   10 term: fact .
+   13 fact: fact . EXPON fact
+
+    EXPON  shift, and go to state 18
+
+    $default  reduce using rule 10 (term)
+
+
+State 11
+
+   12 fact: MINUS fact .
+   13     | fact . EXPON fact
+
+    EXPON  shift, and go to state 18
+
+    $default  reduce using rule 12 (fact)
+
+    Conflict between rule 12 and token EXPON resolved as shift (MINUS < EXPON).
+
+
+State 12
+
+    5 exp: exp . PLUS term
+    6    | exp . MINUS term
+   14 fact: LB exp . RB
+
+    PLUS   shift, and go to state 13
+    MINUS  shift, and go to state 14
+    RB     shift, and go to state 19
+
+
+State 13
+
+    5 exp: exp PLUS . term
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    term  go to state 20
+    fact  go to state 10
+
+
+State 14
+
+    6 exp: exp MINUS . term
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    term  go to state 21
+    fact  go to state 10
+
+
+State 15
+
+    4 line: exp EOL .
+
+    $default  reduce using rule 4 (line)
+
+
+State 16
+
+    8 term: term MULT . fact
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    fact  go to state 22
+
+
+State 17
+
+    9 term: term DIV . fact
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    fact  go to state 23
+
+
+State 18
+
+   13 fact: fact EXPON . fact
+
+    NUMBER  shift, and go to state 3
+    MINUS   shift, and go to state 4
+    LB      shift, and go to state 6
+
+    fact  go to state 24
+
+
+State 19
+
+   14 fact: LB exp RB .
+
+    $default  reduce using rule 14 (fact)
+
+
+State 20
+
+    5 exp: exp PLUS term .
+    8 term: term . MULT fact
+    9     | term . DIV fact
+
+    MULT  shift, and go to state 16
+    DIV   shift, and go to state 17
+
+    $default  reduce using rule 5 (exp)
+
+
+State 21
+
+    6 exp: exp MINUS term .
+    8 term: term . MULT fact
+    9     | term . DIV fact
+
+    MULT  shift, and go to state 16
+    DIV   shift, and go to state 17
+
+    $default  reduce using rule 6 (exp)
+
+
+State 22
+
+    8 term: term MULT fact .
+   13 fact: fact . EXPON fact
+
+    EXPON  shift, and go to state 18
+
+    $default  reduce using rule 8 (term)
+
+
+State 23
+
+    9 term: term DIV fact .
+   13 fact: fact . EXPON fact
+
+    EXPON  shift, and go to state 18
+
+    $default  reduce using rule 9 (term)
+
+
+State 24
+
+   13 fact: fact . EXPON fact
+   13     | fact EXPON fact .
+
+    EXPON  shift, and go to state 18
+
+    $default  reduce using rule 13 (fact)
+
+    Conflict between rule 13 and token EXPON resolved as shift (%right EXPON).

@@ -1,0 +1,19 @@
+2-1
+
+1.-nostdinc的用处是不会在系统默认目录中搜索头文件，而是在-I,-iquote.-isystem,/或-idirafter显示声明的目录和当前目录下中搜索头文>件
+2.
+/usr/lib/gcc/x86_64-linux-gnu/5/include
+/usr/local/include
+/usr/lib/gcc/x86-64_linux-gnu/5/include-fixed
+/usr/include/x85_64-linux-gnu
+/usr/include
+3.gcc -E -nostdinc -I/usr/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include sample-io.c -o sample-io.i
+用-I选项来告诉系统查找头文件的路径
+
+2-2
+1.-nostdlib的用处是不使用系统标准的文件和库，忽略系统库链接的选项，只有指定的库传给链接器
+2.
+/lib/x86_64-linux-gnu/libc.so.6
+/lib64/ld-linux-x86-64.so.2 
+3.gcc -nostdlib sample-io.c -o sample-io -Xlinker /lib/x86_64-linux-gnu/libc.so.6 -Xlinker /lib64/ld-linuxx-x86-64.so.2
+用-Xlinker选项告诉系统链接库的路径
